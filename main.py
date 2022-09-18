@@ -39,9 +39,9 @@ def get_weather():
     # 天气
     weather = res['weather'][0]['main']
     # 最高气温
-    max_temp = res['main']['temp_max']
+    max_temp = int(res['main']['temp_max']-273.15)
     # 最低气温
-    min_temp = res['main']['temp_min']
+    min_temp = int(res['main']['temp_min']-273.15)
     # 城市
     city = res['name']
     return weather, max_temp, min_temp, city
