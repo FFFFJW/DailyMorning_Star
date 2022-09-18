@@ -32,36 +32,18 @@ def get_access_token():
     return access_token
 
 
-def get_weather(province, city):
-    # 城市id
-    try:
-        city_id = cityinfo.cityInfo[province][city]["AREAID"]
-    except KeyError:
-        print("推送消息失败，请检查省份或城市是否正确")
-        os.system("pause")
-        sys.exit(1)
-    # city_id = 101280101
-    # 毫秒级时间戳
-    t = (int(round(time() * 1000)))
-    headers = {
-        "Referer": "http://www.weather.com.cn/weather1d/{}.shtml".format(city_id),
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) '
-                      'AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36'
-    }
-    url = "http://d1.weather.com.cn/dingzhi/{}.html?_={}".format(city_id, t)
-    response = get(url, headers=headers)
-    response.encoding = "utf-8"
-    response_data = response.text.split(";")[0].split("=")[-1]
-    response_json = eval(response_data)
-    # print(response_json)
-    weatherinfo = response_json["weatherinfo"]
+def get_weather():
+    url = "https://api.openweathermap.org/data/2.5/weather?lat=40.1019528&lon=-88.2271611&appid=6aa06a52f60a97923e44f73629308c99"
+    res = requests.get(url).json()
     # 天气
-    weather = weatherinfo["weather"]
+    weather = res['weather'][0]['main']
     # 最高气温
-    temp = weatherinfo["temp"]
+    max_temp = res['main']['temp_max']
     # 最低气温
-    tempn = weatherinfo["tempn"]
-    return weather, temp, tempn
+    min_temp = res['main']['temp_min']
+    # 城市
+    city = res['name']
+    return weather, max_temp, min_temp, city
 
 
 def get_birthday(birthday, year, today):
@@ -216,8 +198,7 @@ if __name__ == "__main__":
     # 接收的用户
     users = config["user"]
     # 传入省份和市获取天气信息
-    province, city = config["province"], config["city"]
-    weather, max_temperature, min_temperature = get_weather(province, city)
+    weather, max_temperature, min_temperature, city = get_weather()
     # 获取词霸每日金句
     note_ch, note_en = get_ciba()
     # 公众号推送消息
