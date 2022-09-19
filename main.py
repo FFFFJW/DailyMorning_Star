@@ -109,6 +109,13 @@ def send_message(to_user, access_token, city_name, weather, max_temperature, min
     love_date = date(love_year, love_month, love_day)
     # 获取在一起的日期差
     love_days = str(today.__sub__(love_date)).split(" ")[0]
+    # 获取出国的日子的日期格式
+    amr_year = int(config["amr_date"].split("-")[0])
+    amr_month = int(config["amr_date"].split("-")[1])
+    amr_day = int(config["amr_date"].split("-")[2])
+    amr_date = date(amr_year, amr_month, amr_day)
+    # 获取出国的日期差
+    amr_days = str(today.__sub__(amr_date)).split(" ")[0]
     # 获取所有生日数据
     birthdays = {}
     for k, v in config.items():
@@ -142,6 +149,10 @@ def send_message(to_user, access_token, city_name, weather, max_temperature, min
             },
             "love_day": {
                 "value": love_days,
+                "color": get_color()
+            },
+            "amr_day": {
+                "value": amr_days,
                 "color": get_color()
             },
             "note_en": {
