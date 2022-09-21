@@ -34,17 +34,26 @@ def get_access_token():
 
 
 def get_weather():
-    url = "https://api.openweathermap.org/data/2.5/weather?lat=40.1019528&lon=-88.2271611&appid=6aa06a52f60a97923e44f73629308c99"
-    res = requests.get(url).json()
+    url_1 = "https://api.openweathermap.org/data/2.5/forecast?q=Champaign&lang=zh_cn&units=metric&cnt=6&appid=01e57c14025393e0da703a0fa8b2d8e3"
+    res_1 = requests.get(url_1).json()
     # 天气
-    weather = res['weather'][0]['main']
-    # 最高气温
-    max_temp = int(res['main']['temp_max']-273.15)
-    # 最低气温
-    min_temp = int(res['main']['temp_min']-273.15)
-    # 城市
-    city = res['name']
-    return weather, max_temp, min_temp, city
+    weather_all = ['0','1','2','3','4','5']
+    date = res_1['list'][0]['dt_txt'][:10]
+    city = 'Champaign'
+    for i in range(6):
+        temp = int(res_1['list'][i]['main']['temp_max'])
+        weather = res_1['list'][i]['weather'][0]['description']
+        time_1 = res_1['list'][i]['dt_txt']
+    
+        a_time = time.strptime(time_1,'%Y-%m-%d %H:%M:%S')
+        b_time = time.mktime(a_time) - (60*60*6)
+        c_time = time.localtime(b_time)
+        time_amr = time.strftime("%Y-%m-%d %H:%M:%S", c_time)[11:-3]
+        final = time_amr + ' ' + str(temp) +'℃' + ' ' + weather
+    
+        weather_all[i] = final
+        
+    return weather_all, city, date
 
 
 def get_birthday(birthday, year, today):
@@ -94,7 +103,7 @@ def get_ciba():
     return note_ch, note_en
 
 
-def send_message(to_user, access_token, city_name, weather, max_temperature, min_temperature, note_ch, note_en):
+def send_message(to_user, access_token, city_name, weather, date_my, note_ch, note_en):
     url = "https://api.weixin.qq.com/cgi-bin/message/template/send?access_token={}".format(access_token)
     week_list = ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"]
     year = localtime().tm_year
@@ -128,23 +137,35 @@ def send_message(to_user, access_token, city_name, weather, max_temperature, min
         "topcolor": "#FF0000",
         "data": {
             "date": {
-                "value": "{} {}".format(today, week),
+                "value": date_my,
                 "color": get_color()
             },
             "city": {
                 "value": city_name,
                 "color": get_color()
             },
-            "weather": {
-                "value": weather,
+            "weather_0": {
+                "value": weather[0],
                 "color": get_color()
             },
-            "min_temperature": {
-                "value": min_temperature,
+            "weather_1": {
+                "value": weather[1],
                 "color": get_color()
             },
-            "max_temperature": {
-                "value": max_temperature,
+            "weather_2": {
+                "value": weather[2],
+                "color": get_color()
+            },
+            "weather_3": {
+                "value": weather[3],
+                "color": get_color()
+            },
+            "weather_4": {
+                "value": weather[4],
+                "color": get_color()
+            },
+            "weather_5": {
+                "value": weather[5],
                 "color": get_color()
             },
             "love_day": {
@@ -210,10 +231,10 @@ if __name__ == "__main__":
     # 接收的用户
     users = config["user"]
     # 传入省份和市获取天气信息
-    weather, max_temperature, min_temperature, city = get_weather()
+    weather_all, date, city = get_weather()
     # 获取词霸每日金句
     note_ch, note_en = get_ciba()
     # 公众号推送消息
     for user in users:
-        send_message(user, accessToken, city, weather, max_temperature, min_temperature, note_ch, note_en)
+        send_message(user, accessToken, city, weather_all, date, note_ch, note_en)
     os.system("pause")
