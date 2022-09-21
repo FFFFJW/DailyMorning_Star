@@ -39,6 +39,7 @@ def get_weather():
     res_1 = requests.get(url_1).json()
     # 天气
     weather_all = ['0','1','2','3','4','5']
+    time_all = ['0','1','2','3','4','5']
     date = res_1['list'][0]['dt_txt'][:10]
     city = 'Champaign'
     for i in range(6):
@@ -53,8 +54,9 @@ def get_weather():
         final = str(temp) +'℃' + ' ' + weather
     
         weather_all[i] = final
+        time_all[i] = time_amr
         
-    return weather_all, city, date
+    return time_all, weather_all, city, date
 
 
 def get_birthday(birthday, year, today):
@@ -104,7 +106,7 @@ def get_ciba():
     return note_ch, note_en
 
 
-def send_message(to_user, access_token, city_name, weather, date_my, note_ch, note_en, color_1):
+def send_message(to_user, access_token, city_name, time_all, weather, date_my, note_ch, note_en, color_1):
     url = "https://api.weixin.qq.com/cgi-bin/message/template/send?access_token={}".format(access_token)
     week_list = ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"]
     year = localtime().tm_year
@@ -144,6 +146,30 @@ def send_message(to_user, access_token, city_name, weather, date_my, note_ch, no
             "city": {
                 "value": city_name,
                 "color": get_color()
+            },
+            "time_0": {
+                "value": time_all[0],
+                "color": '#000000'
+            },
+            "time_1": {
+                "value": time_all[1],
+                "color": '#000000'
+            },
+            "time_2": {
+                "value": time_all[2],
+                "color": '#000000'
+            },
+            "time_3": {
+                "value": time_all[3],
+                "color": '#000000'
+            },
+            "time_4": {
+                "value": time_all[4],
+                "color": '#000000'
+            },
+            "time_5": {
+                "value": time_all[5],
+                "color": '#000000'
             },
             "weather_0": {
                 "value": weather[0],
@@ -232,12 +258,12 @@ if __name__ == "__main__":
     # 接收的用户
     users = config["user"]
     # 传入省份和市获取天气信息
-    weather_all, city_my, date_my = get_weather()
+    time_all, weather_all, city_my, date_my = get_weather()
     # 获取词霸每日金句
     note_ch, note_en = get_ciba()
     # 获取随机一个颜色
     color_1 = get_color()
     # 公众号推送消息
     for user in users:
-        send_message(user, accessToken, city_my, weather_all, date_my, note_ch, note_en, color_1)
+        send_message(user, accessToken, city_my, time_all, weather_all, date_my, note_ch, note_en, color_1)
     os.system("pause")
