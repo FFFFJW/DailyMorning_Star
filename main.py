@@ -147,27 +147,27 @@ def send_message(to_user, access_token, city_name, weather, date_my, note_ch, no
             },
             "weather_0": {
                 "value": weather[0],
-                "color": color_1
+                "color": get_color()
             },
             "weather_1": {
                 "value": weather[1],
-                "color": color_1
+                "color": get_color()
             },
             "weather_2": {
                 "value": weather[2],
-                "color": color_1
+                "color": get_color()
             },
             "weather_3": {
                 "value": weather[3],
-                "color": color_1
+                "color": get_color()
             },
             "weather_4": {
                 "value": weather[4],
-                "color": color_1
+                "color": get_color()
             },
             "weather_5": {
                 "value": weather[5],
-                "color": color_1
+                "color": get_color()
             },
             "love_day": {
                 "value": love_days,
