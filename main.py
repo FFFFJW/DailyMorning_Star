@@ -232,10 +232,10 @@ if __name__ == "__main__":
     # 接收的用户
     users = config["user"]
     # 传入省份和市获取天气信息
-    weather_all, date, city = get_weather()
+    weather_all, city_my, date_my = get_weather()
     # 获取词霸每日金句
     note_ch, note_en = get_ciba()
     # 公众号推送消息
     for user in users:
-        send_message(user, accessToken, city, weather_all, date, note_ch, note_en)
+        send_message(user, accessToken, city_my, weather_all, date_my, note_ch, note_en)
     os.system("pause")
