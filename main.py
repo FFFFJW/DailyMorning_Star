@@ -50,7 +50,7 @@ def get_weather():
         b_time = time.mktime(a_time) - (60*60*6)
         c_time = time.localtime(b_time)
         time_amr = time.strftime("%Y-%m-%d %H:%M:%S", c_time)[11:-3]
-        final = time_amr + ' ' + str(temp) +'℃' + ' ' + weather
+        final = str(temp) +'℃' + ' ' + weather
     
         weather_all[i] = final
         
