@@ -104,7 +104,7 @@ def get_ciba():
     return note_ch, note_en
 
 
-def send_message(to_user, access_token, city_name, weather, date_my, note_ch, note_en):
+def send_message(to_user, access_token, city_name, weather, date_my, note_ch, note_en, color_1):
     url = "https://api.weixin.qq.com/cgi-bin/message/template/send?access_token={}".format(access_token)
     week_list = ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"]
     year = localtime().tm_year
@@ -147,27 +147,27 @@ def send_message(to_user, access_token, city_name, weather, date_my, note_ch, no
             },
             "weather_0": {
                 "value": weather[0],
-                "color": get_color()
+                "color": color_1
             },
             "weather_1": {
                 "value": weather[1],
-                "color": get_color()
+                "color": color_1
             },
             "weather_2": {
                 "value": weather[2],
-                "color": get_color()
+                "color": color_1
             },
             "weather_3": {
                 "value": weather[3],
-                "color": get_color()
+                "color": color_1
             },
             "weather_4": {
                 "value": weather[4],
-                "color": get_color()
+                "color": color_1
             },
             "weather_5": {
                 "value": weather[5],
-                "color": get_color()
+                "color": color_1
             },
             "love_day": {
                 "value": love_days,
@@ -235,7 +235,9 @@ if __name__ == "__main__":
     weather_all, city_my, date_my = get_weather()
     # 获取词霸每日金句
     note_ch, note_en = get_ciba()
+    # 获取随机一个颜色
+    color_1 = get_color()
     # 公众号推送消息
     for user in users:
-        send_message(user, accessToken, city_my, weather_all, date_my, note_ch, note_en)
+        send_message(user, accessToken, city_my, weather_all, date_my, note_ch, note_en, color_1)
     os.system("pause")
